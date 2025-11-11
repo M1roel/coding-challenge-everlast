@@ -8,3 +8,17 @@
   padding: 16px;
   transition: box-shadow 0.3s ease;
 }
+
+.lead-card-progress-wrapper {
+  width: 100%;
+  height: 12px;
+  background-color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 5px 0;
+}
+
+.lead-card-progress-bar {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}

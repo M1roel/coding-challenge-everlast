@@ -34,7 +34,7 @@ class LeadSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['score', 'created_at', 'updated_at']
+        read_only_fields = ['tenant', 'score', 'created_at', 'updated_at']
     
     def validate_email(self, value):
         """Ensure email is lowercase."""
