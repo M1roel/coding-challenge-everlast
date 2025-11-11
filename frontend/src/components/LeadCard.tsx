@@ -1,5 +1,5 @@
 import '../styles/LeadCard.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const calculateScore = (
     budget: number,
