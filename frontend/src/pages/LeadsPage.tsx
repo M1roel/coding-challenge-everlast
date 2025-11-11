@@ -1,8 +1,10 @@
 import { useLeadsPolling } from "../hooks/useLeadsPolling";
+import { useNavigate } from "react-router-dom";
 import LeadTable from "../components/LeadTable";
 import '../styles/LeadPage.css';
 
 export default function LeadsPage() {
+  const navigate = useNavigate()
   
   const { 
     leads, 
@@ -49,6 +51,7 @@ export default function LeadsPage() {
       <div className="header">
         <h1>Lead Management (Live)</h1>
         <div className="controls">
+          <button onClick={() => navigate('/new')}>Neuen Lead anlegen</button>
           <button onClick={refetch}>Manuell aktualisieren</button>
           <button onClick={togglePolling}>
             Auto-Refresh: {isPolling ? 'AN' : 'AUS'}

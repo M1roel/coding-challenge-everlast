@@ -1,5 +1,6 @@
-import '../styles/LeadCard.css';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import '../styles/LeadCard.css';
 
 const calculateScore = (
     budget: number,
@@ -21,6 +22,7 @@ const calculateScore = (
 };
 
 const LeadCard = () => {
+    const navigate = useNavigate()
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -115,13 +117,14 @@ const LeadCard = () => {
 
         setTimeout(() => {
             setMessage('');
+            navigate('/');
         }, 2000);
-        
+
     };
 
     return (
         <form onSubmit={handleSubmit} className="lead-card">
-            <h2 className="lead-card-title"> ➕ Neuen Kunden hinzufügen</h2>
+            <h2 className="lead-card-title"> ➕ Neuen Lead anlegen</h2>
             <input
                 type="text"
                 className="lead-card-input"
@@ -218,6 +221,7 @@ const LeadCard = () => {
             </div>
             <label className="lead-card-progress-label">Score: {score}%</label>
             <button className="lead-card-button" type="submit">Speichern</button>
+            <button className="lead-card-button" type="button" onClick={() => navigate('/')}>Abbrechen</button>
             {message && <p>{message}</p>}
         </form>
     );
