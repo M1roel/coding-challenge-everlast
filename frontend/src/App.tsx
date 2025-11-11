@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.css'
 import LeadCard from './components/LeadCard'
@@ -6,7 +5,6 @@ import LeadTable from './components/LeadTable'
 import { useLeadsPolling } from './hooks/useLeadsPolling'
 
 function LeadsPage() {
-  const [pollingEnabled, setPollingEnabled] = useState(true)
   
   const { 
     leads, 
@@ -14,21 +12,13 @@ function LeadsPage() {
     error, 
     refetch, 
     startPolling, 
-    stopPolling 
-  } = useLeadsPolling({
-    pollingInterval: 5000,
-    enabled: pollingEnabled,
-  })
+    stopPolling,
+    isPolling
+  } = useLeadsPolling()
 
   const togglePolling = () => {
-    if (pollingEnabled) {
-      stopPolling()
-      setPollingEnabled(false)
-    } else {
-      startPolling()
-      setPollingEnabled(true)
-    }
-  }
+  isPolling ? stopPolling() : startPolling()
+}
 
   if (loading && leads.length === 0) {
     return (
@@ -63,7 +53,7 @@ function LeadsPage() {
         <div className="controls">
           <button onClick={refetch}>Manuell aktualisieren</button>
           <button onClick={togglePolling}>
-            Auto-Refresh: {pollingEnabled ? 'AN' : 'AUS'}
+            Auto-Refresh: {isPolling ? 'AN' : 'AUS'}
           </button>
           {/* {loading && <span className="spinner">🔄</span>} */}
           <span style={{ marginLeft: '10px', color: '#666' }}>
@@ -81,8 +71,8 @@ function App() {
     <div className='App'>
       <Router>
         <Routes>
-          <Route path='/' element={<LeadCard />} />
-          <Route path='/leads' element={<LeadsPage />} />
+          <Route path='/new' element={<LeadCard />} />
+          <Route path='/' element={<LeadsPage />} />
         </Routes>
       </Router>
     </div>

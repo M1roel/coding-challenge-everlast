@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { Lead } from '../types/lead'
 
 interface UseLeadsPollingOptions {
-  pollingInterval?: number // in milliseconds
+  pollingInterval?: number
   enabled?: boolean
   search?: string
   industry?: string
@@ -18,14 +18,15 @@ interface UseLeadsPollingReturn {
   refetch: () => Promise<void>
   startPolling: () => void
   stopPolling: () => void
+  isPolling: boolean
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
 export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsPollingReturn => {
   const {
-    pollingInterval = 5000, // Default: alle 5 Sekunden
-    enabled = true,
+    pollingInterval = 10000,
+    enabled,
     search,
     industry,
     urgency,
@@ -36,7 +37,7 @@ export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsP
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const [isPolling, setIsPolling] = useState<boolean>(enabled)
+  const [isPolling, setIsPolling] = useState<boolean>(enabled ?? true)
   
   const intervalRef = useRef<number | null>(null)
 
@@ -45,7 +46,6 @@ export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsP
       setLoading(true)
       setError(null)
 
-      // Build query params
       const params = new URLSearchParams()
       if (search) params.append('search', search)
       if (industry) params.append('industry', industry)
@@ -54,7 +54,6 @@ export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsP
 
       const url = `${API_BASE_URL}/leads/?${params.toString()}`
 
-      // Build headers
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       }
@@ -70,7 +69,6 @@ export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsP
 
       const data = await response.json()
       
-      // Django REST Framework returns paginated data with 'results' array
       const leadsData = data.results || data
       console.log('Fetched leads:', leadsData)
       setLeads(leadsData)
@@ -96,19 +94,16 @@ export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsP
   }
 
   useEffect(() => {
-    // Initial fetch
     if (isPolling) {
       fetchLeads()
     }
 
-    // Setup polling
     if (isPolling && pollingInterval > 0) {
       intervalRef.current = window.setInterval(() => {
         fetchLeads()
       }, pollingInterval)
     }
 
-    // Cleanup
     return () => {
       if (intervalRef.current !== null) {
         clearInterval(intervalRef.current)
@@ -122,6 +117,7 @@ export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsP
     error,
     refetch: fetchLeads,
     startPolling,
-    stopPolling
+    stopPolling,
+    isPolling
   }
 }
