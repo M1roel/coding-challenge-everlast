@@ -21,6 +21,11 @@
 }
 
 thead {
-  background: linear-gradient(135deg, #2D334A 0%, #4A3F7F 50%, #7F5AF0 100%);
+  background: linear-gradient(
+    135deg, 
+    #2D334A 0%, 
+    #4A3F7F 50%, 
+    #7F5AF0 100%
+);
   color: #fff;
 }
