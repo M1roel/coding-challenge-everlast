@@ -1,5 +1,10 @@
 .lead-card {
-  background: linear-gradient(135deg, #2e2e2e 0%, #2a0d3a 60%, #3b0f55 100%);
+  background: linear-gradient(
+    120deg,
+    var(--background) 0%,
+    var(--surface) 60%,
+    var(--primary) 100%
+  );
   border: 1px solid #ddd;
   border-radius: 8px;
   display: flex;
@@ -10,7 +15,7 @@
 }
 
 .lead-card-progress-wrapper {
-  background-color: #333;
+  background-color: var(--surface);
   border-radius: 8px;
   height: 12px;
   margin: 5px 0;
@@ -25,8 +30,8 @@
 
 .lead-card-input,
 .lead-card-select {
-    background-color: #1e1e1e;
-    border: 1px solid #555;
+    background-color: var(--background);
+    border: 1px solid var(--surface);
     border-radius: 4px;
     box-sizing: border-box;
     color: #fff;

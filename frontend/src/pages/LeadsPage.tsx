@@ -1,5 +1,6 @@
 import { useLeadsPolling } from "../hooks/useLeadsPolling";
 import LeadTable from "../components/LeadTable";
+import '../styles/LeadPage.css';
 
 export default function LeadsPage() {
   
@@ -52,8 +53,7 @@ export default function LeadsPage() {
           <button onClick={togglePolling}>
             Auto-Refresh: {isPolling ? 'AN' : 'AUS'}
           </button>
-          {/* {loading && <span className="spinner">🔄</span>} */}
-          <span style={{ marginLeft: '10px', color: '#666' }}>
+          <span style={{ marginLeft: '10px', color: '#16161a' }}>
             {leads.length} Lead{leads.length !== 1 ? 's' : ''} geladen
           </span>
         </div>
