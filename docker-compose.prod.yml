@@ -8,14 +8,20 @@ services:
       - "8001:8001"
     env_file:
       - ./backend/.env.production
+    volumes:
+      # SQLite Datenbank persistieren - WICHTIG!
+      - sqlite_data:/app/data
+      # Static & Media Files
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8001 --workers 3 config.wsgi:application"
-    networks:
-      - supabase_network
     restart: unless-stopped
 
-networks:
-  supabase_network:
-    external: true
+volumes:
+  sqlite_data:
+    driver: local
+  static_volume:
+  media_volume:

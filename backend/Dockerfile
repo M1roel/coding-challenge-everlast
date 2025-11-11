@@ -8,6 +8,9 @@ ENV PYTHONUNBUFFERED=1
 # Set work directory
 WORKDIR /app
 
+# Create data directory for SQLite
+RUN mkdir -p /app/data
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     postgresql-client \
