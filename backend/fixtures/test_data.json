@@ -1,0 +1,112 @@
+[
+  {
+    "model": "leads.tenant",
+    "pk": 1,
+    "fields": {
+      "name": "Acme Corporation",
+      "slug": "acme-corporation",
+      "created_at": "2025-11-01T10:00:00Z",
+      "updated_at": "2025-11-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "leads.tenant",
+    "pk": 2,
+    "fields": {
+      "name": "Tech Innovations GmbH",
+      "slug": "tech-innovations-gmbh",
+      "created_at": "2025-11-02T10:00:00Z",
+      "updated_at": "2025-11-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "leads.lead",
+    "pk": 1,
+    "fields": {
+      "tenant": 1,
+      "first_name": "Max",
+      "last_name": "Mustermann",
+      "email": "max.mustermann@example.com",
+      "company": "Tech Solutions AG",
+      "budget": "75000.00",
+      "company_size": 350,
+      "industry": "tech",
+      "urgency": "immediately",
+      "score": 85,
+      "created_at": "2025-11-05T10:00:00Z",
+      "updated_at": "2025-11-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "leads.lead",
+    "pk": 2,
+    "fields": {
+      "tenant": 1,
+      "first_name": "Anna",
+      "last_name": "Schmidt",
+      "email": "anna.schmidt@financeplus.de",
+      "company": "Finance Plus",
+      "budget": "120000.00",
+      "company_size": 600,
+      "industry": "finance",
+      "urgency": "this_week",
+      "score": 90,
+      "created_at": "2025-11-06T10:00:00Z",
+      "updated_at": "2025-11-06T10:00:00Z"
+    }
+  },
+  {
+    "model": "leads.lead",
+    "pk": 3,
+    "fields": {
+      "tenant": 1,
+      "first_name": "Peter",
+      "last_name": "Weber",
+      "email": "p.weber@healthcare.com",
+      "company": "Health Systems",
+      "budget": "35000.00",
+      "company_size": 80,
+      "industry": "healthcare",
+      "urgency": "this_month",
+      "score": 45,
+      "created_at": "2025-11-07T10:00:00Z",
+      "updated_at": "2025-11-07T10:00:00Z"
+    }
+  },
+  {
+    "model": "leads.lead",
+    "pk": 4,
+    "fields": {
+      "tenant": 2,
+      "first_name": "Lisa",
+      "last_name": "Müller",
+      "email": "lisa.mueller@startup.io",
+      "company": "Startup Ventures",
+      "budget": "15000.00",
+      "company_size": 25,
+      "industry": "tech",
+      "urgency": "later",
+      "score": 45,
+      "created_at": "2025-11-08T10:00:00Z",
+      "updated_at": "2025-11-08T10:00:00Z"
+    }
+  },
+  {
+    "model": "leads.lead",
+    "pk": 5,
+    "fields": {
+      "tenant": 2,
+      "first_name": "Thomas",
+      "last_name": "Klein",
+      "email": "t.klein@enterprise.com",
+      "company": "Enterprise Solutions",
+      "budget": "200000.00",
+      "company_size": 1500,
+      "industry": "tech",
+      "urgency": "immediately",
+      "score": 100,
+      "created_at": "2025-11-09T10:00:00Z",
+      "updated_at": "2025-11-09T10:00:00Z"
+    }
+  }
+]

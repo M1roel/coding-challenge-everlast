@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: lead-scoring-backend-prod
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./backend/.env.production
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn --bind 0.0.0.0:8001 --workers 3 config.wsgi:application"
+    networks:
+      - supabase_network
+    restart: unless-stopped
+
+networks:
+  supabase_network:
+    external: true
