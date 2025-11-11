@@ -21,6 +21,12 @@ const calculateScore = (
 };
 
 const LeadCard = () => {
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        saveLead();
+    };
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -54,6 +60,11 @@ const LeadCard = () => {
     const saveLead = async () => {
         if (!firstName || !lastName || !email || !company) {
             setMessage('Bitte alle Pflichtfelder ausfüllen.');
+
+            setTimeout(() => {
+                setMessage('');
+            }, 2000);
+
             return;
         }
 
@@ -83,7 +94,6 @@ const LeadCard = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                // Hier bekommst du die genauen Feldfehler
                 console.error('Backend Validation Errors:', errorData);
                 alert('Speichern fehlgeschlagen:\n' + JSON.stringify(errorData, null, 2));
                 return;
@@ -102,10 +112,15 @@ const LeadCard = () => {
         } catch (error) {
             setMessage('Speichern fehlgeschlagen: ' + error);
         }
+
+        setTimeout(() => {
+            setMessage('');
+        }, 2000);
+        
     };
 
     return (
-        <div className="lead-card">
+        <form onSubmit={handleSubmit} className="lead-card">
             <h2 className="lead-card-title"> ➕ Neuen Kunden hinzufügen</h2>
             <input
                 type="text"
@@ -202,9 +217,9 @@ const LeadCard = () => {
                 ></div>
             </div>
             <label className="lead-card-progress-label">Score: {score}%</label>
-            <button className="lead-card-button" onClick={saveLead}>Speichern</button>
+            <button className="lead-card-button" type="submit">Speichern</button>
             {message && <p>{message}</p>}
-        </div>
+        </form>
     );
 };
 
