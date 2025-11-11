@@ -3,8 +3,6 @@ import './App.css'
 import LeadCard from './components/LeadCard'
 import LeadsPage from './pages/LeadsPage'
 
-
-
 function App() {
   return (
     <div className='App'>
