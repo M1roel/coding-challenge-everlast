@@ -524,7 +524,7 @@ MIT License - siehe [LICENSE](LICENSE) für Details
 
 ## 👤 Autor
 
-**Dein Name**
+**Peter Pfautsch**
 - GitHub: [@username](https://github.com/M1roel)
 - LinkedIn: [Dein Profil](https://linkedin.com/in/peter-pfautsch)
 
@@ -532,7 +532,7 @@ MIT License - siehe [LICENSE](LICENSE) für Details
 
 ## 🙏 Acknowledgments
 
-- Challenge von [Company Name]
+- Challenge von [Everlast]
 - Django Documentation
 - React Documentation
 - Supabase für PostgreSQL Hosting

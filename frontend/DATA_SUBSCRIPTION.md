@@ -5,7 +5,7 @@
 Die App nutzt **Polling** für automatische Live-Updates der Lead-Daten aus der SQLite-Datenbank.
 
 ### ✅ Aktuelle Implementierung: **Polling mit Auto-Refresh**
-- Automatische Aktualisierung alle 5 Sekunden
+- Automatische Aktualisierung alle 10 Sekunden
 - Start/Stop Kontrolle mit Toggle-Button
 - Manuelles Refresh jederzeit möglich
 - Echtzeit-Updates ohne WebSockets
