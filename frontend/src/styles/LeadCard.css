@@ -1,8 +1,10 @@
 .lead-card {
+  background: linear-gradient(135deg, #2e2e2e 0%, #2a0d3a 60%, #3b0f55 100%);
   border: 1px solid #ddd;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 16px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
