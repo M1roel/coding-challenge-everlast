@@ -525,8 +525,8 @@ MIT License - siehe [LICENSE](LICENSE) für Details
 ## 👤 Autor
 
 **Dein Name**
-- GitHub: [@username](https://github.com/username)
-- LinkedIn: [Dein Profil](https://linkedin.com/in/username)
+- GitHub: [@username](https://github.com/M1roel)
+- LinkedIn: [Dein Profil](https://linkedin.com/in/peter-pfautsch)
 
 ---
 
@@ -542,8 +542,8 @@ MIT License - siehe [LICENSE](LICENSE) für Details
 ## 📞 Support
 
 Bei Fragen oder Problemen:
-- Issue öffnen: [GitHub Issues](https://github.com/username/lead-scoring-engine/issues)
-- Email: your.email@example.com
+- Issue öffnen: [GitHub Issues](https://github.com/M1roel/lead-scoring-engine/issues)
+- Email: kontakt@peterpfautsch.de
 
 ---
 

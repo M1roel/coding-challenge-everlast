@@ -219,7 +219,7 @@ const LeadCard = () => {
                     }}
                 ></div>
             </div>
-            <label className="lead-card-progress-label">Score: {score}%</label>
+            <label className="lead-card-progress-label">Score: {score} / 100</label>
             <button className="lead-card-button" type="submit">Speichern</button>
             <button className="lead-card-button" type="button" onClick={() => navigate('/')}>Abbrechen</button>
             {message && <p>{message}</p>}
