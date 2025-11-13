@@ -17,44 +17,37 @@
 
 ```
 ┌─────────────────────────────────────┐
-│  Frontend (React)                   │
-│  - Lead-Form                        │
+│  Frontend (React + Vite)            │
+│  - Lead-Form mit Score-Preview      │
 │  - Lead-Liste (sortiert nach Score) │
-│  - Dashboard: Top Leads             │
-│  - Port: 3000 (dev) / 3002 (prod)   │
+│  - Auto-Refresh (Polling)           │
+│  - Port: 5173 (dev)                 │
 └─────────────┬───────────────────────┘
               │ REST API Calls
+              │ (http://localhost:8000)
               ↓
 ┌─────────────────────────────────────┐
 │  Backend (Django REST Framework)    │
 │  - Lead Model mit Scoring-Logik     │
-│  - Multi-Tenancy (tenant_id)        │
-│  - REST Endpoints (CRUD)            │
-│  - Docker Container                 │
-│  - Port: 8001                       │
+│  - Multi-Tenancy Support            │
+│  - REST API (CRUD)                  │
+│  - Port: 8000                       │
 └─────────────┬───────────────────────┘
-              │ PostgreSQL Connection
+              │ SQLite
               ↓
 ┌─────────────────────────────────────┐
-│  Supabase PostgreSQL                │
-│  - Schema: lead_scoring             │
+│  SQLite Database                    │
+│  - File: backend/db.sqlite3         │
 │  - Tables: leads_lead, leads_tenant │
-│  - Existierender Docker Container   │
-│  - Port: 5432 (intern)              │
+│  - Lokal, keine Installation nötig  │
 └─────────────────────────────────────┘
 ```
 
-### Docker-Netzwerk:
-```
-Linux V-Server
-│
-├── supabase_network (Docker Network)
-│   ├── Supabase PostgreSQL Container
-│   ├── Django Backend Container (neu)
-│   └── Weitere Supabase Services
-│
-└── Node.js Weather App (bestehendes Projekt)
-```
+**Lokales Development Setup:**
+- SQLite für einfaches Setup ohne externe Dependencies
+- Django Development Server (Port 8000)
+- Vite Dev Server mit HMR (Port 5173)
+- Automatisches Polling alle 10 Sekunden
 
 ---
 
@@ -132,7 +125,7 @@ class Lead(models.Model):
 **Implementierung:**
 - Middleware prüft Tenant-ID aus Request-Header
 - QuerySet-Filter: `Lead.objects.filter(tenant=request.tenant)`
-- Row-Level Security in PostgreSQL (optional)
+- Optional: Row-Level Security für Production
 
 ---
 
@@ -141,16 +134,38 @@ class Lead(models.Model):
 ### Voraussetzungen
 - Python 3.11+
 - Node.js 18+
-- Docker & Docker Compose
-- Zugriff auf Linux V-Server mit Supabase
+- Git
 
-### 1. Repository klonen
+### Quick Start (Empfohlen)
+
 ```bash
-git clone https://github.com/username/lead-scoring-engine.git
+# 1. Repository klonen
+git clone https://github.com/M1roel/coding-challenge-everlast.git
 cd lead-scoring-engine
+
+# 2. Backend Setup mit Automatik-Script
+./setup.sh
+
+# 3. Backend starten
+cd backend
+source venv/bin/activate  # Linux/Mac
+python manage.py runserver 8000
+
+# 4. Neues Terminal: Frontend starten
+cd frontend
+npm install
+npm run dev
 ```
 
-### 2. Backend Setup (Lokal entwickeln)
+**Das war's! 🚀**
+- Backend: http://localhost:8000/api/leads/
+- Frontend: http://localhost:5173
+- Admin Panel: http://localhost:8000/admin
+
+
+## 🔧 Manuelle Installation (Alternative)
+
+### Backend Setup
 
 ```bash
 cd backend
@@ -180,13 +195,13 @@ python manage.py createsuperuser
 python manage.py loaddata fixtures/test_data.json
 
 # Server starten
-python manage.py runserver
+python manage.py runserver 8000
 ```
 
 **Backend läuft auf:** http://localhost:8000
 **Admin Panel:** http://localhost:8000/admin
 
-### 3. Frontend Setup
+### Frontend Setup
 
 ```bash
 cd frontend
@@ -194,77 +209,29 @@ cd frontend
 # Dependencies installieren
 npm install
 
-# Environment Variables
+# Environment Variables (optional)
 cp .env.example .env
-# .env editieren:
-# REACT_APP_API_URL=http://localhost:8000/api
+# Standard: VITE_API_URL=http://localhost:8000/api
 
 # Development Server starten
-npm start
+npm run dev
 ```
 
-**Frontend läuft auf:** http://localhost:3000
+**Frontend läuft auf:** http://localhost:5173
 
-### 4. Production Deployment (Docker auf V-Server)
+---
 
-#### A. Supabase Connection Details finden
+## 🐳 Production Deployment (Optional)
 
-```bash
-# SSH auf deinen Server
-ssh user@your-server.com
+Die Anwendung kann auch mit Docker deployed werden. 
+Siehe `FUTURE_IMPROVEMENTS.txt` für Deployment-Szenarien.
 
-# Supabase Container-Name finden
-docker ps | grep postgres
-# z.B. "supabase-db" oder "supabase_db_1"
+### Docker-Konfiguration verfügbar:
+- `docker-compose.yml` - Development mit SQLite
+- `docker-compose.prod.yml` - Production mit persistentem Volume
+- `Dockerfile` - Backend Container Image
 
-# Docker-Netzwerk finden
-docker network ls
-# z.B. "supabase_default"
-```
-
-#### B. Backend für Production vorbereiten
-
-```bash
-# backend/.env.production
-DEBUG=False
-DATABASE_URL=postgresql://postgres:YOUR_SUPABASE_PASSWORD@supabase-db:5432/postgres
-ALLOWED_HOSTS=your-server.com,localhost
-SECRET_KEY=your-secret-key-here
-```
-
-#### C. Docker Build & Deploy
-
-```bash
-# Projekt auf Server übertragen
-git clone https://github.com/username/lead-scoring-engine.git
-cd lead-scoring-engine
-
-# Environment Variables setzen
-cp backend/.env.production backend/.env
-
-# Docker Build
-docker-compose -f docker-compose.prod.yml build
-
-# Container starten
-docker-compose -f docker-compose.prod.yml up -d
-
-# Migrations in Production ausführen
-docker-compose exec backend python manage.py migrate
-
-# Static Files sammeln
-docker-compose exec backend python manage.py collectstatic --noinput
-```
-
-#### D. PostgreSQL Schema erstellen (einmalig)
-
-```bash
-# In Supabase Container
-docker exec -it supabase-db psql -U postgres
-
-# SQL ausführen:
-CREATE SCHEMA IF NOT EXISTS lead_scoring;
-GRANT ALL ON SCHEMA lead_scoring TO postgres;
-```
+Deployment-Anleitung auf Anfrage.
 
 ---
 
@@ -272,7 +239,6 @@ GRANT ALL ON SCHEMA lead_scoring TO postgres;
 
 ### Base URL
 - Development: `http://localhost:8000/api`
-- Production: `http://your-server.com:8001/api`
 
 ### Endpoints
 
@@ -353,12 +319,12 @@ npm test
 ```
 
 ### E2E Test (manuell)
-1. Backend starten: `python manage.py runserver`
-2. Frontend starten: `npm start`
-3. Im Browser öffnen: `http://localhost:3000`
-4. Lead anlegen → Score sollte automatisch berechnet werden
-5. Lead-Liste aktualisiert sich
-6. Sortierung nach Score funktioniert
+1. Backend starten: `python manage.py runserver 8000`
+2. Frontend starten: `npm run dev`
+3. Im Browser öffnen: `http://localhost:5173`
+4. Lead anlegen → Score wird automatisch berechnet
+5. Lead-Liste aktualisiert sich automatisch (Polling)
+6. Leads mit Score ≥ 70 werden hervorgehoben
 
 ---
 
@@ -366,11 +332,11 @@ npm test
 
 ### Entscheidungen & Begründungen
 
-#### 1. **SQLite (Dev) vs PostgreSQL (Prod)**
-- **Gewählt:** Beide unterstützen
-- **Pro:** Schnelle lokale Entwicklung, production-ready Database
-- **Con:** Kleine Unterschiede in SQL-Features
-- **Mitigation:** Django ORM abstrahiert meiste Unterschiede
+#### 1. **SQLite für Development**
+- **Gewählt:** SQLite als Standard-Datenbank
+- **Pro:** Keine Installation nötig, schnelles Setup, ausreichend für < 100k Leads
+- **Con:** Nicht für Multi-Server-Szenarien geeignet
+- **Alternative:** PostgreSQL für Production mit höherer Last
 
 #### 2. **Scoring-Berechnung im Backend vs Frontend**
 - **Gewählt:** Backend (in Model.save())
@@ -378,11 +344,11 @@ npm test
 - **Con:** Kein Client-seitiges Preview
 - **Alternative:** Scoring-Logik in separaten Service auslagern
 
-#### 3. **Multi-Tenancy: Row-Level Security vs Application-Level**
+#### 3. **Multi-Tenancy: Application-Level**
 - **Gewählt:** Application-Level (Django QuerySet Filter)
-- **Pro:** Einfacher zu implementieren, portabel
+- **Pro:** Einfach zu implementieren, portabel, gut für MVP
 - **Con:** Nicht auf DB-Level abgesichert
-- **Next Step:** PostgreSQL Row-Level Security hinzufügen
+- **Next Step:** Row-Level Security für Production
 
 #### 4. **Tenant-ID aus Header vs URL vs Session**
 - **Gewählt:** Request Header (`X-Tenant-ID`)
@@ -396,47 +362,30 @@ npm test
 - **Con:** Nicht lernfähig
 - **Next Step:** ML-Model für adaptive Scoring
 
-#### 6. **Frontend State Management: useState vs Redux**
-- **Gewählt:** React useState + Context API
-- **Pro:** Einfach, ausreichend für MVP
-- **Con:** Bei großer App schwierig zu skalieren
-- **Next Step:** Bei Wachstum auf Zustand oder Redux umstellen
+#### 6. **Frontend State Management: useState**
+- **Gewählt:** React useState + Custom Hooks
+- **Pro:** Einfach, ausreichend für MVP, kein Overhead
+- **Con:** Bei sehr großer App schwierig zu skalieren
+- **Next Step:** Context API oder Zustand bei Bedarf
 
-#### 7. **Docker: Separate Container vs Docker Compose**
-- **Gewählt:** Docker Compose mit shared Network
-- **Pro:** Einfaches Setup, Service-Discovery
-- **Con:** Alle Services müssen zusammen starten
-- **Alternative:** Kubernetes für Production-Scale
+#### 7. **Polling vs WebSockets**
+- **Gewählt:** HTTP Polling (10 Sekunden Intervall)
+- **Pro:** Einfach, funktioniert überall, kein persistente Connection
+- **Con:** Höhere Server-Last als WebSockets
+- **Next Step:** WebSockets für Real-Time Updates
 
 ---
 
-## 🔄 Next Steps / Roadmap
+## 🔄 Future Improvements
 
-### Phase 1: MVP Erweiterungen
-- [ ] Lead Status Tracking (New → Contacted → Qualified → Won/Lost)
-- [ ] Lead-Notizen/Kommentare
-- [ ] Lead-Aktivitäts-Historie
-- [ ] Email-Benachrichtigungen bei High-Score Leads
+Siehe `FUTURE_IMPROVEMENTS.txt` für eine Liste geplanter Features und Verbesserungen.
 
-### Phase 2: Features
-- [ ] Dashboard mit Metriken (Conversion Rate, Avg. Score, etc.)
-- [ ] Export als CSV/PDF
-- [ ] Bulk-Import von Leads
-- [ ] Lead-Zuweisung an Sales-Mitarbeiter
-
-### Phase 3: Optimierungen
-- [ ] Machine Learning für adaptive Scoring
-- [ ] A/B Testing verschiedener Scoring-Formeln
-- [ ] PostgreSQL Row-Level Security
-- [ ] Caching (Redis) für Performance
-- [ ] Real-time Updates (WebSockets)
-
-### Phase 4: Enterprise Features
-- [ ] SSO/SAML Integration
-- [ ] Audit Logs
-- [ ] Custom Scoring-Formeln per Tenant
-- [ ] API Rate Limiting
-- [ ] Monitoring & Alerting (Prometheus/Grafana)
+**Highlights:**
+- Dynamischer Score-Filter im Frontend
+- Lead bearbeiten/löschen Funktionalität
+- Sortierbare Tabellen-Spalten
+- CSV-Export
+- Production Deployment auf Linux Server
 
 ---
 
@@ -445,22 +394,20 @@ npm test
 ### Backend
 - **Python 3.11+**
 - **Django 5.0+** - Web Framework
-- **Django REST Framework** - API
-- **PostgreSQL 15+** - Datenbank (via Supabase)
-- **Gunicorn** - WSGI Server
-- **Docker** - Containerization
+- **Django REST Framework** - REST API
+- **SQLite** - Datenbank (Development)
+- **Gunicorn** - WSGI Server (Production)
 
 ### Frontend
-- **React 18+** - UI Framework
-- **Axios** - HTTP Client
-- **React Router** - Navigation
-- **Tailwind CSS** - Styling (optional)
+- **React 18+** - UI Library
+- **Vite** - Build Tool & Dev Server
+- **TypeScript** - Type Safety
+- **React Router** - Client-side Routing
 
-### Infrastructure
-- **Docker & Docker Compose** - Deployment
-- **Nginx** - Reverse Proxy (optional)
-- **Supabase** - PostgreSQL Hosting
-- **Linux V-Server** - Hosting
+### Development
+- **Git** - Version Control
+- **ESLint** - Code Linting
+- **Python venv** - Virtual Environment
 
 ---
 
@@ -487,19 +434,22 @@ lead-scoring-engine/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/         # React Components
-│   │   │   ├── LeadForm.jsx
-│   │   │   ├── LeadList.jsx
-│   │   │   └── Dashboard.jsx
-│   │   ├── services/           # API Calls
-│   │   │   └── api.js
-│   │   ├── App.jsx
-│   │   └── index.js
+│   │   │   ├── LeadCard.tsx    # Lead Form
+│   │   │   └── LeadTable.tsx   # Lead List
+│   │   ├── pages/              # Page Components
+│   │   │   └── LeadsPage.tsx
+│   │   ├── hooks/              # Custom Hooks
+│   │   │   └── useLeadsPolling.ts
+│   │   ├── types/              # TypeScript Types
+│   │   │   └── lead.ts
+│   │   ├── App.tsx
+│   │   └── main.tsx
 │   ├── package.json
-│   ├── Dockerfile
 │   └── .env.example
 │
-├── docker-compose.yml
-├── docker-compose.prod.yml
+├── setup.sh                    # Automatisches Backend Setup
+├── docker-compose.yml          # Optional: Docker Setup
+├── FUTURE_IMPROVEMENTS.txt     # Geplante Features
 ├── .gitignore
 └── README.md
 ```
@@ -525,28 +475,27 @@ MIT License - siehe [LICENSE](LICENSE) für Details
 ## 👤 Autor
 
 **Peter Pfautsch**
-- GitHub: [@username](https://github.com/M1roel)
-- LinkedIn: [Dein Profil](https://linkedin.com/in/peter-pfautsch)
+- GitHub: [@M1roel](https://github.com/M1roel)
+- LinkedIn: [Peter Pfautsch](https://linkedin.com/in/peter-pfautsch)
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Challenge von [Everlast]
-- Django Documentation
-- React Documentation
-- Supabase für PostgreSQL Hosting
+- Coding Challenge von Everlast
+- Django & Django REST Framework Documentation
+- React & Vite Documentation
 
 ---
 
 ## 📞 Support
 
 Bei Fragen oder Problemen:
-- Issue öffnen: [GitHub Issues](https://github.com/M1roel/lead-scoring-engine/issues)
+- Issue öffnen: [GitHub Issues](https://github.com/M1roel/coding-challenge-everlast/issues)
 - Email: kontakt@peterpfautsch.de
 
 ---
 
-**Erstellt für:** Coding Challenge - Sales CRM/ERP Context
-**Entwicklungszeit:** 2-3 Tage
-**Status:** MVP Completed ✅
+**Erstellt für:** Coding Challenge - Sales Lead Scoring System  
+**Entwicklungszeit:** 2-3 Tage  
+**Status:** MVP Ready ✅
