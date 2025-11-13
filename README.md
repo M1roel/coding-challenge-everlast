@@ -120,12 +120,13 @@ class Lead(models.Model):
 
 ### Multi-Tenancy Isolation
 
-**Konzept:** Jeder Lead gehört zu einem Tenant (Firma/Organisation). User sehen nur Leads ihres Tenants.
+**Konzept:** Jeder Lead gehört zu einem Tenant (Firma/Organisation). Die API filtert Leads automatisch basierend auf der Tenant-ID im Request-Header.
 
 **Implementierung:**
-- Middleware prüft Tenant-ID aus Request-Header
+- Middleware prüft Tenant-ID aus Request-Header (`X-Tenant-ID`)
 - QuerySet-Filter: `Lead.objects.filter(tenant=request.tenant)`
-- Optional: Row-Level Security für Production
+- **Production:** User-Authentifizierung mit JWT würde sicherstellen, dass User nur Leads ihres eigenen Tenants sehen können
+- **Zusätzlich:** Row-Level Security (PostgreSQL RLS) für DB-Level-Absicherung
 
 ---
 

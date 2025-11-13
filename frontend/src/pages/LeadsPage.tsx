@@ -24,7 +24,9 @@ export default function LeadsPage() {
     startPolling, 
     stopPolling,
     isPolling
-  } = useLeadsPolling()
+  } = useLeadsPolling({
+    tenantId: import.meta.env.VITE_TENANT_ID
+  })
 
   const togglePolling = () => {
   isPolling ? stopPolling() : startPolling()
