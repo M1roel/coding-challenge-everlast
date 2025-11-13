@@ -1,3 +1,6 @@
+/**
+ * Represents a sales lead with scoring information
+ */
 export interface Lead {
   id: number
   first_name: string
@@ -14,6 +17,11 @@ export interface Lead {
   tenant?: number
 }
 
+/**
+ * Aggregated statistics for leads
+ * 
+ * @note Currently unused - prepared for future dashboard/analytics features
+ */
 export interface LeadStats {
   total_leads: number
   avg_score: number

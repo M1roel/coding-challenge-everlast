@@ -6,6 +6,21 @@ interface LeadTableProps {
     leads: Lead[];
 }
 
+/**
+ * Table component for displaying a list of leads
+ * 
+ * Renders leads in a sortable table with visual indicators for high-scoring leads.
+ * High-scoring leads (score >= 70) are highlighted with a special style.
+ * 
+ * @component
+ * @param {LeadTableProps} props - Component props
+ * @returns {JSX.Element} Rendered table or empty state message
+ * 
+ * @example
+ * ```tsx
+ * <LeadTable leads={leadsData} />
+ * ```
+ */
 const LeadTable: React.FC<LeadTableProps> = ({ leads }) => {
     if (leads.length === 0) {
         return (

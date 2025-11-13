@@ -1,0 +1,41 @@
+Lead Scoring Engine - Future Improvements
+==========================================
+
+Features für einen zusätzlichen Arbeitstag (10 Stunden):
+
+
+1. DYNAMISCHER SCORE-FILTER IM FRONTEND (1-2h)
+   - Dropdown/Select zum Filtern von Leads nach minScore
+   - Optionen: "Alle", "Score ≥ 50" (Mittel+), "Score ≥ 70" (Key Accounts), "Score ≥ 85" (Top Priority)
+   - Reduziert Backend-Traffic durch serverseitiges Filtering
+   - Implementierung: State in LeadsPage.tsx + Übergabe an useLeadsPolling Hook
+
+2. LEAD BEARBEITEN / LÖSCHEN (2-3h)
+   - Edit-Button in jeder Tabellenzeile
+   - Modal/Formular zum Bearbeiten von Lead-Daten
+   - Delete-Button mit Bestätigungs-Dialog
+   - Implementierung: PUT/DELETE API-Calls + UI-Feedback
+
+3. SORTIERUNG DER TABELLE (1-2h)
+   - Klickbare Spalten-Header zum Sortieren
+   - Auf-/Absteigende Sortierung nach: Score, Name, Firma, Datum
+   - Visueller Indikator (▲▼) für aktive Sortierung
+   - Implementierung: Sort-State + Array.sort() oder Backend-Parameter
+
+4. EXPORT-FUNKTION (1-2h)
+   - Button "Als CSV exportieren"
+   - Filtered Leads oder alle Leads exportieren
+   - Download mit aktuellem Datum im Dateinamen
+   - Implementierung: CSV-Generierung client-seitig
+
+5. PRODUCTION DEPLOYMENT AUF LINUX UBUNTU SERVER (3-4h)
+   - Backend in Docker Container deployen
+   - SQLite mit persistentem Docker Volume
+   - Nginx als Reverse Proxy konfigurieren
+   - SSL-Zertifikat mit Let's Encrypt
+   - Frontend auf Vercel/Netlify
+
+
+Gesamt: ~10 Stunden = 1 Arbeitstag
+Priorisiert nach Business-Value und schneller Umsetzbarkeit
+

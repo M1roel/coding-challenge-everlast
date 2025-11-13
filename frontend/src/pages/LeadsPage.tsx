@@ -3,6 +3,16 @@ import { useNavigate } from "react-router-dom";
 import LeadTable from "../components/LeadTable";
 import '../styles/LeadPage.css';
 
+/**
+ * Main page component for displaying and managing leads
+ * 
+ * Features:
+ * - Real-time polling of leads from backend
+ * - Manual refresh capability
+ * - Toggle for auto-refresh
+ * - Navigation to lead creation form
+ * - Error handling with debugging information
+ */
 export default function LeadsPage() {
   const navigate = useNavigate()
   
@@ -35,7 +45,7 @@ export default function LeadsPage() {
         <h2>Fehler beim Laden der Daten</h2>
         <p><strong>Fehlermeldung:</strong> {error}</p>
         <button onClick={refetch}>Erneut versuchen</button>
-        <div style={{ marginTop: '20px', textAlign: 'left', padding: '10px', background: '#f5f5f5' }}>
+        <div style={{ marginTop: '20px', textAlign: 'left', padding: '10px'}}>
           <h3>Hilfe:</h3>
           <ul>
             <li>Prüfe ob das Backend läuft: <a href="http://localhost:8000/api/leads/" target="_blank" rel="noopener noreferrer">http://localhost:8000/api/leads/</a></li>

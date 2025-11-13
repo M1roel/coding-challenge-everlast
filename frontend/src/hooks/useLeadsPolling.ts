@@ -23,6 +23,20 @@ interface UseLeadsPollingReturn {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
+/**
+ * Custom React hook for fetching and polling leads from the API
+ * 
+ * Provides automatic data fetching with configurable polling interval,
+ * filtering capabilities, and manual refetch control.
+ * 
+ * @example
+ * ```tsx
+ * const { leads, loading, error, startPolling, stopPolling } = useLeadsPolling({
+ *   pollingInterval: 5000,
+ *   minScore: 50
+ * })
+ * ```
+ */
 export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsPollingReturn => {
   const {
     pollingInterval = 10000,
@@ -57,6 +71,7 @@ export const useLeadsPolling = (options: UseLeadsPollingOptions = {}): UseLeadsP
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       }
+      
       if (tenantId) {
         headers['X-Tenant-ID'] = tenantId
       }
