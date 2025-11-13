@@ -18,7 +18,7 @@
 ```
 ┌─────────────────────────────────────┐
 │  Frontend (React + Vite)            │
-│  - Lead-Form mit Score-Preview      │
+│  - Lead-Formular (Create)           │
 │  - Lead-Liste (sortiert nach Score) │
 │  - Auto-Refresh (Polling)           │
 │  - Port: 5173 (dev)                 │
@@ -210,9 +210,11 @@ cd frontend
 # Dependencies installieren
 npm install
 
-# Environment Variables (optional)
+# Environment Variables setzen
 cp .env.example .env
-# Standard: VITE_API_URL=http://localhost:8000/api
+# .env editieren:
+# VITE_API_URL=http://localhost:8000/api
+# VITE_TENANT_ID=1  # Für Multi-Tenancy (erforderlich)
 
 # Development Server starten
 npm run dev
@@ -422,10 +424,9 @@ lead-scoring-engine/
 │   │   ├── urls.py
 │   │   └── wsgi.py
 │   ├── leads/                  # Main App
-│   │   ├── models.py           # Lead, Tenant Models
+│   │   ├── models.py           # Lead, Tenant Models + Scoring Logic
 │   │   ├── serializers.py      # DRF Serializers
 │   │   ├── views.py            # API Views
-│   │   ├── scoring.py          # Scoring Logic
 │   │   └── middleware.py       # Tenant Middleware
 │   ├── manage.py
 │   ├── requirements.txt
