@@ -5,9 +5,9 @@
     var(--surface) 60%,
     var(--primary) 100%
   );
+    border-bottom: 1px solid var(--surface);
     color: white;
     padding: 12px 15px;
-    border-bottom: 1px solid var(--surface);
 }
 
 .controls {

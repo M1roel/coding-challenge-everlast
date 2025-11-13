@@ -1,13 +1,13 @@
 .lead-table {
-  width: 100%;
   border-collapse: collapse;
   margin-top: 24px;
+  width: 100%;
 }
 
 .lead-table th,
 .lead-table td {
-  padding: 12px 15px;
   border: 1px solid var(--surface);
+  padding: 12px 15px;
 }
 
 .high-score {
@@ -27,5 +27,5 @@ thead {
     var(--background-light) 50%, 
     var(--primary) 100%
 );
-  color: #fff;
+  color: white;
 }
