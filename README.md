@@ -468,12 +468,6 @@ lead-scoring-engine/
 
 ---
 
-## 📝 License
-
-MIT License - siehe [LICENSE](LICENSE) für Details
-
----
-
 ## 👤 Autor
 
 **Peter Pfautsch**
